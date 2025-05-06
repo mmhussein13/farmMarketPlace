@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}Checkout{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <h1 class="mb-4">Checkout</h1>
+        
+        {% if cart_items %}
+        <form action="{% url 'place_order' %}" method="POST">
+            {% csrf_token %}
+            <div class="row">
+                <!-- Billing Information -->
+                <div class="col-lg-7">
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">Billing Information</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="id_first_name" class="form-label">First Name</label>
+                                    <input type="text" name="first_name" class="form-control" id="id_first_name" value="{{ request.user.first_name }}" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="id_last_name" class="form-label">Last Name</label>
+                                    <input type="text" name="last_name" class="form-control" id="id_last_name" value="{{ request.user.last_name }}" required>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="id_email" class="form-label">Email</label>
+                                <input type="email" name="email" class="form-control" id="id_email" value="{{ request.user.email }}" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="id_phone" class="form-label">Phone Number</label>
+                                <input type="text" name="phone" class="form-control" id="id_phone" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="id_address_line_1" class="form-label">Address Line 1</label>
+                                <input type="text" name="address_line_1" class="form-control" id="id_address_line_1" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="id_address_line_2" class="form-label">Address Line 2 (Optional)</label>
+                                <input type="text" name="address_line_2" class="form-control" id="id_address_line_2">
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="id_city" class="form-label">City</label>
+                                    <input type="text" name="city" class="form-control" id="id_city" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="id_state" class="form-label">State/Province</label>
+                                    <input type="text" name="state" class="form-control" id="id_state" required>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="id_country" class="form-label">Country</label>
+                                    <input type="text" name="country" class="form-control" id="id_country" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="id_postal_code" class="form-label">Postal Code</label>
+                                    <input type="text" name="postal_code" class="form-control" id="id_postal_code" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="save_info">
+                                <label class="form-check-label" for="save_info">
+                                    Save this information for next time
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Payment Method -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">Payment Method</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="radio" name="payment_method" id="paypal" value="PayPal" checked>
+                                <label class="form-check-label" for="paypal">
+                                    PayPal
+                                </label>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="radio" name="payment_method" id="credit_card" value="Credit Card">
+                                <label class="form-check-label" for="credit_card">
+                                    Credit Card
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Order Summary -->
+                <div class="col-lg-5">
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">Order Summary</h5>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="mb-3">Products ({{ quantity }})</h6>
+                            {% for cart_item in cart_items %}
+                            <div class="d-flex justify-content-between mb-2">
+                                <div>
+                                    <span>{{ cart_item.product.name }} x {{ cart_item.quantity }}</span>
+                                </div>
+                                <span>${{ cart_item.sub_total }}</span>
+                            </div>
+                            {% endfor %}
+                            
+                            <hr>
+                            
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Subtotal:</span>
+                                <span>${{ total }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Tax (5%):</span>
+                                <span>${{ tax }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Shipping:</span>
+                                <span>Free</span>
+                            </div>
+                            
+                            <hr>
+                            
+                            <div class="d-flex justify-content-between mb-3">
+                                <strong>Total:</strong>
+                                <strong>${{ grand_total }}</strong>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary btn-lg w-100">
+                                Place Order
+                            </button>
+                            
+                            <div class="small text-muted text-center mt-3">
+                                By placing your order, you agree to our <a href="#">Terms and Conditions</a> and <a href="#">Privacy Policy</a>.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        
+        {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-shopping-cart fa-4x text-muted mb-3"></i>
+            <h3>Your Cart is Empty</h3>
+            <p class="text-muted">You need to add some products to your cart before checking out.</p>
+            <a href="{% url 'shop' %}" class="btn btn-primary mt-3">Continue Shopping</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
