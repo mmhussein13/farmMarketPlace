@@ -1,0 +1,7 @@
+
+        <svg width="300" height="300" xmlns="http://www.w3.org/2000/svg">
+            <rect width="300" height="300" fill="#1abc9c" />
+            <text x="150" y="150" font-family="Arial" font-size="20" text-anchor="middle" fill="white">Fresh Milk (1L)</text>
+            <text x="150" y="180" font-family="Arial" font-size="16" text-anchor="middle" fill="white">$3.99</text>
+        </svg>
+        
