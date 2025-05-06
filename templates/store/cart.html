@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load custom_filters %}
 
 {% block title %}Shopping Cart{% endblock %}
 
@@ -42,7 +43,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td>${{ cart_item.product.price }}</td>
+                                    <td>{{ cart_item.product.price|ugx_currency }}</td>
                                     <td>
                                         <div class="input-group" style="width: 120px;">
                                             <a href="{% url 'remove_cart' cart_item.product.id %}" class="btn btn-sm btn-outline-secondary">
@@ -54,7 +55,7 @@
                                             </a>
                                         </div>
                                     </td>
-                                    <td>${{ cart_item.sub_total }}</td>
+                                    <td>{{ cart_item.sub_total|ugx_currency }}</td>
                                     <td>
                                         <a href="{% url 'remove_cart_item' cart_item.product.id %}" class="btn btn-sm btn-danger">
                                             <i class="fas fa-trash"></i>
@@ -86,16 +87,16 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between mb-2">
                             <span>Subtotal:</span>
-                            <span>${{ total }}</span>
+                            <span>{{ total|ugx_currency }}</span>
                         </div>
                         <div class="d-flex justify-content-between mb-2">
                             <span>Tax (5%):</span>
-                            <span>${{ tax }}</span>
+                            <span>{{ tax|ugx_currency }}</span>
                         </div>
                         <hr>
                         <div class="d-flex justify-content-between mb-3">
                             <strong>Total:</strong>
-                            <strong>${{ grand_total }}</strong>
+                            <strong>{{ grand_total|ugx_currency }}</strong>
                         </div>
                         
                         <a href="{% url 'checkout' %}" class="btn btn-primary btn-lg w-100 mb-3">
